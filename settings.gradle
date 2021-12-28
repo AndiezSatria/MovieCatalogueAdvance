@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Movie Catalogue Advance"
 include ':app'
+include ':core'
