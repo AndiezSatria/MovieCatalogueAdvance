@@ -5,6 +5,6 @@ import io.realm.annotations.PrimaryKey
 
 open class GenreEntity(
     @PrimaryKey
-    var id: Int,
-    var name: String
+    var id: Int = 0,
+    var name: String = ""
 ) : RealmObject()
