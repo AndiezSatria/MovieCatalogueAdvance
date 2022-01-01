@@ -14,7 +14,5 @@ data class MovieResponse(
     @field:SerializedName("release_date")
     var releaseDate: String,
     @field:SerializedName("vote_average")
-    var voteAverage: Double,
-    @field:SerializedName("genre_ids")
-    var genreIds: List<Int>,
+    var voteAverage: Double
 )

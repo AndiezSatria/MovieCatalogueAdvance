@@ -27,4 +27,19 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
             Log.e("RemoteDataSource", e.toString())
         }
     }.flowOn(Dispatchers.IO)
+
+    suspend fun getPopularMovies(): Flow<ApiResponse<List<MovieResponse>>> = flow {
+        try {
+            val response = apiService.getPopularMovie()
+            val dataArray = response.results
+            if (dataArray.isNotEmpty()) {
+                emit(ApiResponse.Success(response.results))
+            } else {
+                emit(ApiResponse.Empty)
+            }
+        } catch (e: Exception) {
+            emit(ApiResponse.Error(e.toString()))
+            Log.e("RemoteDataSource", e.toString())
+        }
+    }.flowOn(Dispatchers.IO)
 }
