@@ -11,9 +11,11 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:elevation="0dp"
             android:theme="@style/Theme.MovieCatalogueAdvance.AppBarOverlay">
 
             <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 app:popupTheme="@style/Theme.MovieCatalogueAdvance.PopupOverlay" />
@@ -21,6 +23,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_main"
+            android:background="@drawable/rounded_background_shape"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
