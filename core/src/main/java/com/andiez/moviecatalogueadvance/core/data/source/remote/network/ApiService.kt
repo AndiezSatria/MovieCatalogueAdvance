@@ -10,4 +10,10 @@ interface ApiService {
         @Query("api_key") apiKey: String = "",
         @Query("page") page: Int = 1
     ): ListMovieResponse
+
+    @GET("/movie/popular")
+    suspend fun getPopularMovie(
+        @Query("api_key") apiKey: String = "",
+        @Query("page") page: Int = 1
+    ): ListMovieResponse
 }
