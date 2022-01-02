@@ -4,6 +4,8 @@ import com.andiez.moviecatalogueadvance.core.data.source.local.entity.MovieEntit
 import com.andiez.moviecatalogueadvance.core.data.source.local.entity.ShowCategory
 import com.andiez.moviecatalogueadvance.core.data.source.remote.response.MovieResponse
 import com.andiez.moviecatalogueadvance.core.domain.model.Movie
+import java.text.SimpleDateFormat
+import java.util.*
 
 object DataMapper {
     fun mapMovieResponsesToEntities(
@@ -22,12 +24,13 @@ object DataMapper {
     }
 
     fun mapMovieEntitiesToDomains(input: List<MovieEntity>): List<Movie> = input.map { entity ->
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         Movie(
             entity.id,
             entity.originalTitle,
             entity.title,
             entity.img,
-            entity.releaseDate,
+            formatter.parse(entity.releaseDate),
             entity.voteAverage,
         )
     }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lorem">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent id eros vitae felis scelerisque vulputate sit amet eget tortor. Proin sagittis, urna id interdum mollis, arcu justo tincidunt nisi, sed posuere sapien tortor id dolor. Aliquam lobortis at augue quis pretium. Phasellus sit amet nibh et dolor posuere fringilla. Sed pellentesque finibus pharetra. Sed vel lorem congue nisi molestie lacinia. Aliquam imperdiet, enim a convallis semper, dui elit scelerisque elit, non fermentum turpis massa commodo lectus. Proin convallis sollicitudin nisi nec congue. Donec non neque at dui tristique dapibus id in ante. Mauris neque sapien, vestibulum sit amet felis eget, posuere ornare odio. Duis feugiat, mauris quis semper rutrum, lorem neque euismod nisl, vitae congue purus urna a dui. Aliquam vel ante in est egestas iaculis. Quisque sed lorem imperdiet, eleifend purus sed, tempus odio. Nullam mollis eget massa vel aliquet.
+    </string>
+    <string name="text_vote">
+        %1$d / %2$s
+    </string>
+</resources>
