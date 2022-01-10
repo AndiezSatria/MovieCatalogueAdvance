@@ -11,7 +11,8 @@ class BaseApplication : Application() {
         super.onCreate()
         Realm.init(this)
         val configuration = RealmConfiguration.Builder()
-            .schemaVersion(1L)
+            .deleteRealmIfMigrationNeeded()
+            .schemaVersion(2L)
             .build()
         Realm.setDefaultConfiguration(configuration)
     }
