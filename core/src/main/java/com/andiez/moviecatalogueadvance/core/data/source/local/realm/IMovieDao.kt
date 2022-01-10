@@ -2,6 +2,7 @@ package com.andiez.moviecatalogueadvance.core.data.source.local.realm
 
 import com.andiez.moviecatalogueadvance.core.data.source.local.entity.GenreEntity
 import com.andiez.moviecatalogueadvance.core.data.source.local.entity.MovieEntity
+import com.andiez.moviecatalogueadvance.core.data.source.local.entity.TvShowEntity
 import kotlinx.coroutines.flow.Flow
 
 interface IMovieDao {
@@ -10,6 +11,8 @@ interface IMovieDao {
 
     fun getMovies(): Flow<List<MovieEntity>>
     suspend fun insertMovies(movies: List<MovieEntity>)
-
     fun getPopularMovies(): Flow<List<MovieEntity>>
+
+    fun getTvShows(): Flow<List<TvShowEntity>>
+    suspend fun insertTvShows(tvShows: List<TvShowEntity>)
 }
