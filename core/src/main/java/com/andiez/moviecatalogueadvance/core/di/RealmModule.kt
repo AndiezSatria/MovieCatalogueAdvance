@@ -11,13 +11,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class RealmModule {
-    @Singleton
-    @Provides
-    fun provideRealmConfig(): RealmConfiguration = RealmConfiguration.Builder()
-        .schemaVersion(1L)
-        .build()
 
     @Singleton
     @Provides
-    fun provideRealm(configuration: RealmConfiguration): Realm = Realm.getInstance(configuration)
+    fun provideRealm(): Realm = Realm.getDefaultInstance()
 }
