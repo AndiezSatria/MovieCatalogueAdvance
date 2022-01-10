@@ -5,7 +5,9 @@ import com.andiez.moviecatalogueadvance.core.data.source.local.entity.ShowCatego
 import com.andiez.moviecatalogueadvance.core.data.source.remote.RemoteDataSource
 import com.andiez.moviecatalogueadvance.core.data.source.remote.network.ApiResponse
 import com.andiez.moviecatalogueadvance.core.data.source.remote.response.MovieResponse
+import com.andiez.moviecatalogueadvance.core.data.source.remote.response.TvShowResponse
 import com.andiez.moviecatalogueadvance.core.domain.model.Movie
+import com.andiez.moviecatalogueadvance.core.domain.model.TvShow
 import com.andiez.moviecatalogueadvance.core.domain.repository.IMovieRepository
 import com.andiez.moviecatalogueadvance.core.utils.AppExecutors
 import com.andiez.moviecatalogueadvance.core.utils.DataMapper
@@ -59,6 +61,29 @@ class MovieRepository @Inject constructor(
                         data,
                         ShowCategory.Popular
                     )
+                )
+            }
+
+        }.asFlow()
+
+    override fun getTvShows(): Flow<Resource<List<TvShow>>> =
+        object : NetworkBoundResource<List<TvShow>, List<TvShowResponse>>() {
+            override fun loadFromDB(): Flow<List<TvShow>> {
+                return localDataSource.getTvShows()
+                    .map { DataMapper.mapTvEntitiesToDomains(it) }
+            }
+
+            override fun shouldFetch(data: List<TvShow>?): Boolean =
+                // data == null || data.isEmpty()
+                true
+
+            override suspend fun createCall(): Flow<ApiResponse<List<TvShowResponse>>> {
+                return remoteDataSource.getTvShows()
+            }
+
+            override suspend fun saveCallResult(data: List<TvShowResponse>) {
+                localDataSource.insertTvShows(
+                    DataMapper.mapTvResponsesToEntities(data)
                 )
             }
 
