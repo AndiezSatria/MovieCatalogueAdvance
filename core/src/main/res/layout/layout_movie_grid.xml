@@ -7,74 +7,82 @@
 
         <variable
             name="data"
-            type="com.andiez.moviecatalogueadvance.core.domain.model.Movie" />
-
-        <variable
-            name="formatter"
-            type="java.text.SimpleDateFormat" />
+            type="com.andiez.moviecatalogueadvance.core.presenter.model.ShowItem" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="175dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/img_poster"
-            android:layout_width="175dp"
-            android:layout_height="225dp"
-            app:layout_constraintEnd_toEndOf="parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="150dp"
+            android:layout_height="250dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
-            tools:src="@android:color/darker_gray" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@{data.title}"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_poster"
-            tools:text="@string/lorem" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/img_poster"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                app:bindPoster="@{data.img}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
+                tools:src="@android:color/darker_gray" />
 
-        <ImageView
-            android:id="@+id/img_star"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_star"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{data.title}"
+                android:textAlignment="textStart"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_poster"
+                tools:text="@string/lorem" />
 
-        <TextView
-            android:id="@+id/tv_vote"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
-            android:drawablePadding="4dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@{String.format(@string/text_vote, data.voteAverage, formatter.format(data.releaseDate))}"
-            app:layout_constraintBottom_toBottomOf="@+id/img_star"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/img_star"
-            app:layout_constraintTop_toTopOf="@+id/img_star"
-            tools:text="7.8 / 28 Jan 2021" />
+            <RatingBar
+                android:id="@+id/rating_bar"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="false"
+                android:numStars="5"
+                android:rating="@{Float.valueOf(String.valueOf((data.voteAverage/2)))}"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_vote"
+                app:layout_constraintEnd_toStartOf="@+id/tv_vote"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_vote" />
 
+            <TextView
+                android:id="@+id/tv_vote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:drawablePadding="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{String.valueOf(data.voteAverage)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/rating_bar"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                tools:text="7.8" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
