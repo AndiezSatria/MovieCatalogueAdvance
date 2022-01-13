@@ -23,3 +23,20 @@ fun bindPoster(imageView: ImageView, posterPath: String?) {
             .into(imageView)
     }
 }
+
+@BindingAdapter("bindLargePoster")
+fun bindLargePoster(imageView: ImageView, posterPath: String?) {
+    posterPath?.let {
+        val url = "https://image.tmdb.org/t/p/original$it"
+        val imgUri = url.toUri().buildUpon().scheme("https").build()
+        Glide.with(imageView.context)
+            .load(imgUri)
+            .apply(
+                RequestOptions()
+                    .override(150, 200)
+                    .placeholder(R.drawable.loading_animation)
+                    .error(R.drawable.ic_broken_image)
+            )
+            .into(imageView)
+    }
+}

@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">Movie Catalogue Advance</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_home">Home</string>
     <string name="text_search">Search</string>
     <string name="text_favorite">Favorite</string>
     <string name="text_popular_movie">Popular Movie</string>
     <string name="text_movie">Movie</string>
     <string name="text_tv_show">TV Show</string>
+    <string name="detail_args">App://DetailFragment/%s</string>
+    <string name="text_overview">Overview</string>
+    <string name="text_information">Information</string>
+    <string name="text_credit">Credits</string>
+    <string name="title_favorite">Favorite</string>
 </resources>

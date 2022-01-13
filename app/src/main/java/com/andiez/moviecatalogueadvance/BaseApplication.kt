@@ -12,7 +12,7 @@ class BaseApplication : Application() {
         Realm.init(this)
         val configuration = RealmConfiguration.Builder()
             .deleteRealmIfMigrationNeeded()
-            .schemaVersion(2L)
+            .schemaVersion(3L)
             .build()
         Realm.setDefaultConfiguration(configuration)
     }

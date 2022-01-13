@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.andiez.moviecatalogueadvance.core.databinding.LayoutMovieGridBinding
 import com.andiez.moviecatalogueadvance.core.databinding.LayoutMovieNormalBinding
-import com.andiez.moviecatalogueadvance.core.domain.model.Movie
 import com.andiez.moviecatalogueadvance.core.presenter.model.ShowItem
-import com.andiez.moviecatalogueadvance.core.utils.MovieViewHolder
 
 class MovieGridAdapter : ListAdapter<ShowItem, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
     var onItemClick: ((ShowItem) -> Unit)? = null

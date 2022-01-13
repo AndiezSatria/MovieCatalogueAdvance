@@ -8,4 +8,14 @@
         android:id="@+id/homeFragment"
         android:name="com.andiez.moviecatalogueadvance.home.HomeFragment"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.andiez.moviecatalogueadvance.detail.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="idType"
+            android:defaultValue=""/>
+        <deepLink app:uri="App://DetailFragment/{idType}" />
+    </fragment>
 </navigation>

@@ -1,17 +1,22 @@
 package com.andiez.moviecatalogueadvance.home
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.andiez.moviecatalogueadvance.BuildConfig
 import com.andiez.moviecatalogueadvance.MainActivity
 import com.andiez.moviecatalogueadvance.R
 import com.andiez.moviecatalogueadvance.core.data.Resource
 import com.andiez.moviecatalogueadvance.core.presenter.model.ShowItem
+import com.andiez.moviecatalogueadvance.core.presenter.model.ShowType
 import com.andiez.moviecatalogueadvance.core.ui.MovieGridAdapter
 import com.andiez.moviecatalogueadvance.core.utils.DataMapper
-import com.andiez.moviecatalogueadvance.core.utils.MovieViewHolder
+import com.andiez.moviecatalogueadvance.core.ui.MovieViewHolder
+import com.andiez.moviecatalogueadvance.core.utils.CommonUtils
 import com.andiez.moviecatalogueadvance.databinding.FragmentHomeBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -25,20 +30,35 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var tvShowAdapter: MovieGridAdapter
     private lateinit var popularAdapter: MovieGridAdapter
     private val movieClickListener: ((ShowItem) -> Unit) = { item ->
-        // TODO: Navigation to detail
+        val uri = Uri.parse(
+            getString(
+                R.string.detail_args,
+                CommonUtils.createDeeplinkArgs(item.id, ShowType.Movie)
+            )
+        )
+        findNavController().navigate(uri)
     }
     private val tvClickListener: ((ShowItem) -> Unit) = { item ->
-        // TODO: Navigation to detail
+//        val uri = Uri.parse(
+//            getString(
+//                R.string.detail_args,
+//                CommonUtils.createDeeplinkArgs(item.id, ShowType.TvShow)
+//            )
+//        )
+//        findNavController().navigate(uri)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
+        (requireActivity() as MainActivity).setBottomNavVisibility(true)
+        (requireActivity() as MainActivity).supportActionBar?.show()
         (requireActivity() as MainActivity).supportActionBar?.setTitle(R.string.text_home)
+
         movieAdapter = MovieGridAdapter()
         popularAdapter = MovieGridAdapter().apply { viewHolder = MovieViewHolder.Popular }
         tvShowAdapter = MovieGridAdapter()
-        
+
         movieAdapter.onItemClick = movieClickListener
         popularAdapter.onItemClick = movieClickListener
         tvShowAdapter.onItemClick = tvClickListener
