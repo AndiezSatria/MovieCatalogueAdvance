@@ -1,13 +1,7 @@
 package com.andiez.moviecatalogueadvance.core.data.source.local.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.MovieDetailEntity
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.MovieEntity
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.ShowCategory
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.TvShowEntity
+import androidx.room.*
+import com.andiez.moviecatalogueadvance.core.data.source.local.entity.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -27,6 +21,9 @@ interface MovieDao {
     @Query("SELECT * FROM moviedetailentity WHERE id = :id")
     fun getMovieDetail(id: Int): Flow<MovieDetailEntity>
 
+    @Query("SELECT * FROM tvshowdetailentity WHERE id = :id")
+    fun getTvDetail(id: Int): Flow<TvShowDetailEntity>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMovies(movies: List<MovieEntity>)
 
@@ -35,4 +32,25 @@ interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDetailMovie(detailMovieEntity: MovieDetailEntity)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertDetailTv(detailTvShowEntity: TvShowDetailEntity)
+
+    @Query("UPDATE moviedetailentity SET isFavorite = :state WHERE id = :id")
+    fun updateMovieDetailFavorite(id: Int, state: Boolean)
+
+    @Query("UPDATE movieentity SET isFavorite = :state WHERE id = :id")
+    fun updateMovieFavorite(id: Int, state: Boolean)
+
+    @Query("SELECT * FROM movieentity WHERE isFavorite = 1")
+    fun getMoviesFavorite(): Flow<List<MovieEntity>>
+
+    @Query("UPDATE tvshowdetailentity SET isFavorite = :state WHERE id = :id")
+    fun updateTvDetailFavorite(id: Int, state: Boolean)
+
+    @Query("UPDATE tvshowentity SET isFavorite = :state WHERE id = :id")
+    fun updateTvFavorite(id: Int, state: Boolean)
+
+    @Query("SELECT * FROM tvshowentity WHERE isFavorite = 1")
+    fun getTvShowsFavorite(): Flow<List<TvShowEntity>>
 }

@@ -3,6 +3,7 @@ package com.andiez.moviecatalogueadvance.detail
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -40,7 +41,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         viewModel.showType.observe(viewLifecycleOwner) { type ->
             when (type) {
                 ShowType.Movie -> observeMovieDetail()
-                ShowType.TvShow -> {}
+                ShowType.TvShow -> observeTvShowDetail()
                 else -> {}
             }
         }
@@ -64,10 +65,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     binding.pbDetail.visibility = View.GONE
                     castAdapter.submitList(
                         DataMapper.mapCastDomainsToPresenters(
-                            resource.data?.subList(
-                                0,
-                                10
-                            )
+                            resource.data?.let {
+                                it.subList(
+                                    0,
+                                    if (it.size < 10) (it.size - 1) else 10
+                                )
+                            }
                         )
                     )
                 }
@@ -93,10 +96,83 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 }
                 is Resource.Success -> {
                     binding.pbDetail.visibility = View.GONE
-                    binding.data =
-                        resource.data?.let { DataMapper.mapDetailMovieDomainToPresenter(it) }
+                    binding.fabFavorite.isClickable = true
+                    resource.data?.let { detail ->
+                        binding.fabFavorite.setOnClickListener {
+                            setMovieFavorite(detail.id, !detail.isFavorite)
+                        }
+                        binding.data =
+                            DataMapper.mapDetailMovieDomainToPresenter(detail)
+                        setFavoriteButtonState(detail.isFavorite)
+                    }
                 }
             }
+        }
+    }
+
+
+    private fun observeTvShowDetail() {
+        viewModel.tvShowDetail.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Error -> {
+                    binding.pbDetail.visibility = View.GONE
+                    resource.message?.let {
+                        Snackbar.make(
+                            binding.root,
+                            it, Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                    findNavController().popBackStack()
+                }
+                is Resource.Loading -> {
+                    binding.pbDetail.visibility = View.VISIBLE
+                }
+                is Resource.Success -> {
+                    binding.pbDetail.visibility = View.GONE
+                    binding.fabFavorite.isClickable = true
+                    resource.data?.let { detail ->
+                        binding.fabFavorite.setOnClickListener {
+                            setTvFavorite(detail.id, !detail.isFavorite)
+                        }
+                        binding.data =
+                            DataMapper.mapDetailTvShowDomainToPresenter(detail)
+                        setFavoriteButtonState(detail.isFavorite)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setMovieFavorite(id: Int, state: Boolean) {
+        /*
+        update db isFavorite
+         */
+        viewModel.setMovieFavorite(id, state)
+    }
+
+    private fun setTvFavorite(id: Int, state: Boolean) {
+        /*
+        update db isFavorite
+         */
+        viewModel.setTvFavorite(id, state)
+    }
+
+
+    private fun setFavoriteButtonState(statusFavorite: Boolean) {
+        if (statusFavorite) {
+            binding.fabFavorite.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_favorite
+                )
+            )
+        } else {
+            binding.fabFavorite.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_favorite_border
+                )
+            )
         }
     }
 }

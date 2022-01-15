@@ -4,6 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main.xml"
     app:startDestination="@id/homeFragment">
+    <include-dynamic
+        android:id="@+id/favoriteFragment"
+        app:graphPackage="com.andiez.moviecatalogueadvance.favorite"
+        app:graphResName="nav_favorite"
+        app:moduleName="favorite" />
+    <include-dynamic
+        android:id="@+id/searchFragment"
+        app:graphPackage="com.andiez.moviecatalogueadvance.search"
+        app:graphResName="nav_search"
+        app:moduleName="search" />
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.andiez.moviecatalogueadvance.home.HomeFragment"
@@ -11,11 +21,10 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.andiez.moviecatalogueadvance.detail.DetailFragment"
-        android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" >
+        tools:layout="@layout/fragment_detail">
         <argument
             android:name="idType"
-            android:defaultValue=""/>
+            android:defaultValue="" />
         <deepLink app:uri="App://DetailFragment/{idType}" />
     </fragment>
 </navigation>

@@ -1,10 +1,7 @@
 package com.andiez.moviecatalogueadvance.core.domain.usecase
 
 import com.andiez.moviecatalogueadvance.core.data.Resource
-import com.andiez.moviecatalogueadvance.core.domain.model.Cast
-import com.andiez.moviecatalogueadvance.core.domain.model.Movie
-import com.andiez.moviecatalogueadvance.core.domain.model.MovieDetail
-import com.andiez.moviecatalogueadvance.core.domain.model.TvShow
+import com.andiez.moviecatalogueadvance.core.domain.model.*
 import com.andiez.moviecatalogueadvance.core.domain.repository.IMovieRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -26,7 +23,27 @@ class MovieInteractor @Inject constructor(private val repository: IMovieReposito
         return repository.getDetailMovie(id)
     }
 
-    override fun getCasts(id: Int): Flow<Resource<List<Cast>>> {
-        return repository.getCasts(id)
+    override fun getDetailTvShow(id: Int): Flow<Resource<TvShowDetail>> {
+        return repository.getDetailTvShow(id)
+    }
+
+    override fun getCasts(type: String, id: Int): Flow<Resource<List<Cast>>> {
+        return repository.getCasts(type, id)
+    }
+
+    override fun updateMovieFavorite(id: Int, state: Boolean) {
+        repository.setMovieFavorite(id, state)
+    }
+
+    override fun getMovieFavorite(): Flow<List<Movie>> {
+        return repository.getMoviesFavorite()
+    }
+
+    override fun updateTvFavorite(id: Int, state: Boolean) {
+        repository.setTvFavorite(id, state)
+    }
+
+    override fun getTvShowsFavorite(): Flow<List<TvShow>> {
+        return repository.getTvShowsFavorite()
     }
 }

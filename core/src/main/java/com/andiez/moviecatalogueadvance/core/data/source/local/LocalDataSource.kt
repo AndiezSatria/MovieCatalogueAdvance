@@ -1,9 +1,6 @@
 package com.andiez.moviecatalogueadvance.core.data.source.local
 
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.GenreEntity
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.MovieDetailEntity
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.MovieEntity
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.TvShowEntity
+import com.andiez.moviecatalogueadvance.core.data.source.local.entity.*
 import com.andiez.moviecatalogueadvance.core.data.source.local.room.MovieDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -15,9 +12,27 @@ class LocalDataSource @Inject constructor(private val movieDao: MovieDao) {
     fun getTvShows(): Flow<List<TvShowEntity>> = movieDao.getTvShows()
     fun getPopularMovies(): Flow<List<MovieEntity>> = movieDao.getPopularMovies()
     fun getMovieDetail(id: Int): Flow<MovieDetailEntity> = movieDao.getMovieDetail(id)
+    fun getTvDetail(id: Int): Flow<TvShowDetailEntity> = movieDao.getTvDetail(id)
+    fun getMoviesFavorite(): Flow<List<MovieEntity>> = movieDao.getMoviesFavorite()
+    fun getTvShowsFavorite(): Flow<List<TvShowEntity>> = movieDao.getTvShowsFavorite()
 
     suspend fun insertTvShows(tvShows: List<TvShowEntity>) = movieDao.insertTvShows(tvShows)
     suspend fun insertMovies(movies: List<MovieEntity>) = movieDao.insertMovies(movies)
     suspend fun insertMovieDetail(movieDetail: MovieDetailEntity) =
         movieDao.insertDetailMovie(movieDetail)
+
+    suspend fun insertDetailTv(tvShowDetailEntity: TvShowDetailEntity) =
+        movieDao.insertDetailTv(tvShowDetailEntity)
+
+    fun updateMovieDetailFavorite(id: Int, state: Boolean) =
+        movieDao.updateMovieDetailFavorite(id, state)
+
+    fun updateMovieFavorite(id: Int, state: Boolean) =
+        movieDao.updateMovieFavorite(id, state)
+
+    fun updateTvDetailFavorite(id: Int, state: Boolean) =
+        movieDao.updateTvDetailFavorite(id, state)
+
+    fun updateTvFavorite(id: Int, state: Boolean) =
+        movieDao.updateTvFavorite(id, state)
 }

@@ -1,10 +1,7 @@
 package com.andiez.moviecatalogueadvance.core.data.source.remote.network
 
 import com.andiez.moviecatalogueadvance.core.BuildConfig
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.ListCastResponse
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.ListMovieResponse
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.ListTvResponse
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.MovieDetailResponse
+import com.andiez.moviecatalogueadvance.core.data.source.remote.response.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -34,9 +31,16 @@ interface ApiService {
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
     ): MovieDetailResponse
 
-    @GET("movie/{movie_id}/credits")
+    @GET("{type}/{movie_id}/credits")
     suspend fun getCastMovie(
+        @Path("type") showType: String,
         @Path("movie_id") id: Int,
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
     ): ListCastResponse
+
+    @GET("tv/{tv_id}")
+    suspend fun getTvDetail(
+        @Path("tv_id") id: Int,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY
+    ): TvShowDetailResponse
 }

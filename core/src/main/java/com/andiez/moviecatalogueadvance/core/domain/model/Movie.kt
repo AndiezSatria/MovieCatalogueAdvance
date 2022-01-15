@@ -9,4 +9,5 @@ data class Movie(
     var img: String = "",
     var releaseDate: Date? = null,
     var voteAverage: Double = 0.0,
+    var isFavorite: Boolean = false
 )

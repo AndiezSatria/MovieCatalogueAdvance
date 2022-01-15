@@ -11,4 +11,6 @@
     <string name="text_information">Information</string>
     <string name="text_credit">Credits</string>
     <string name="title_favorite">Favorite</string>
+    <string name="title_search">Search</string>
+    <string name="text_no_data">No Data Available</string>
 </resources>

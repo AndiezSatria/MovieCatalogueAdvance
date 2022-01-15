@@ -10,3 +10,4 @@ rootProject.name = "Movie Catalogue Advance"
 include ':app'
 include ':core'
 include ':favorite'
+include ':search'

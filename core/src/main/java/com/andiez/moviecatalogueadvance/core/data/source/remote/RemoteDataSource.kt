@@ -3,10 +3,7 @@ package com.andiez.moviecatalogueadvance.core.data.source.remote
 import android.util.Log
 import com.andiez.moviecatalogueadvance.core.data.source.remote.network.ApiResponse
 import com.andiez.moviecatalogueadvance.core.data.source.remote.network.ApiService
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.CastResponse
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.MovieDetailResponse
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.MovieResponse
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.TvShowResponse
+import com.andiez.moviecatalogueadvance.core.data.source.remote.response.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -71,9 +68,19 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getCasts(id: Int): Flow<ApiResponse<List<CastResponse>>> = flow {
+    suspend fun getDetailTvShow(id: Int): Flow<ApiResponse<TvShowDetailResponse>> = flow {
         try {
-            val response = apiService.getCastMovie(id)
+            val response = apiService.getTvDetail(id)
+            emit(ApiResponse.Success(response))
+        } catch (e: Exception) {
+            emit(ApiResponse.Error(e.toString()))
+            Log.e("RemoteDataSource", e.toString())
+        }
+    }.flowOn(Dispatchers.IO)
+
+    suspend fun getCasts(type: String, id: Int): Flow<ApiResponse<List<CastResponse>>> = flow {
+        try {
+            val response = apiService.getCastMovie(type, id)
             val dataArray = response.casts
             if (dataArray.isNotEmpty()) {
                 emit(ApiResponse.Success(response.casts))

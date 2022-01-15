@@ -24,7 +24,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "API_KEY", "\"0fef9e0e6f91665e6b7a66558256dbbe\""
+        }
         release {
+            buildConfigField "String", "API_KEY", "\"0fef9e0e6f91665e6b7a66558256dbbe\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -39,6 +43,7 @@ android {
     buildFeatures {
         dataBinding true
     }
+    dynamicFeatures = [':favorite', ':search']
 }
 
 dependencies {

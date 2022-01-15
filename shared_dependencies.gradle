@@ -8,6 +8,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
     implementation "androidx.multidex:multidex:$multidex_version"
     implementation "com.makeramen:roundedimageview:2.3.0"
+    implementation "io.github.reactivecircus.flowbinding:flowbinding-material:1.2.0"
 
     implementation "androidx.cardview:cardview:$cardview_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
@@ -21,5 +22,8 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
     kaptAndroidTest "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
     implementation "androidx.hilt:hilt-navigation-fragment:$hilt_navigation_version"
+
+
+    api "androidx.navigation:navigation-dynamic-features-fragment:$navigation_version"
 
 }

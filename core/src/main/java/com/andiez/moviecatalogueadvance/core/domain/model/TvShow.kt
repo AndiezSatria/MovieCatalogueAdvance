@@ -9,4 +9,5 @@ data class TvShow(
     var img: String = "",
     var firstAired: Date? = null,
     var voteAverage: Double = 0.0,
+    var isFavorite: Boolean = false
 )

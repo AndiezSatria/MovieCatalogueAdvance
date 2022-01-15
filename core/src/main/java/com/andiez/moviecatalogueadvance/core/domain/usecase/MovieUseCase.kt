@@ -1,10 +1,7 @@
 package com.andiez.moviecatalogueadvance.core.domain.usecase
 
 import com.andiez.moviecatalogueadvance.core.data.Resource
-import com.andiez.moviecatalogueadvance.core.domain.model.Cast
-import com.andiez.moviecatalogueadvance.core.domain.model.Movie
-import com.andiez.moviecatalogueadvance.core.domain.model.MovieDetail
-import com.andiez.moviecatalogueadvance.core.domain.model.TvShow
+import com.andiez.moviecatalogueadvance.core.domain.model.*
 import kotlinx.coroutines.flow.Flow
 
 interface MovieUseCase {
@@ -12,5 +9,10 @@ interface MovieUseCase {
     fun getTvShows(): Flow<Resource<List<TvShow>>>
     fun getPopularMovies(): Flow<Resource<List<Movie>>>
     fun getDetailMovie(id: Int): Flow<Resource<MovieDetail>>
-    fun getCasts(id: Int): Flow<Resource<List<Cast>>>
+    fun getDetailTvShow(id: Int): Flow<Resource<TvShowDetail>>
+    fun getCasts(type: String, id: Int): Flow<Resource<List<Cast>>>
+    fun updateMovieFavorite(id: Int, state: Boolean)
+    fun getMovieFavorite(): Flow<List<Movie>>
+    fun updateTvFavorite(id: Int, state: Boolean)
+    fun getTvShowsFavorite(): Flow<List<TvShow>>
 }

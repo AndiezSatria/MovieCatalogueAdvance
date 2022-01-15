@@ -5,9 +5,9 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.andiez.moviecatalogueadvance.BuildConfig
 import com.andiez.moviecatalogueadvance.MainActivity
 import com.andiez.moviecatalogueadvance.R
 import com.andiez.moviecatalogueadvance.core.data.Resource
@@ -19,8 +19,10 @@ import com.andiez.moviecatalogueadvance.core.ui.MovieViewHolder
 import com.andiez.moviecatalogueadvance.core.utils.CommonUtils
 import com.andiez.moviecatalogueadvance.databinding.FragmentHomeBinding
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.material.tabSelectionEvents
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -39,13 +41,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         findNavController().navigate(uri)
     }
     private val tvClickListener: ((ShowItem) -> Unit) = { item ->
-//        val uri = Uri.parse(
-//            getString(
-//                R.string.detail_args,
-//                CommonUtils.createDeeplinkArgs(item.id, ShowType.TvShow)
-//            )
-//        )
-//        findNavController().navigate(uri)
+        val uri = Uri.parse(
+            getString(
+                R.string.detail_args,
+                CommonUtils.createDeeplinkArgs(item.id, ShowType.TvShow)
+            )
+        )
+        findNavController().navigate(uri)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,12 +72,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             rvPopularMovie.setHasFixedSize(true)
             rvPopularMovie.layoutManager = layoutManager
             rvPopularMovie.adapter = popularAdapter
-            rvShow.adapter = movieAdapter
-            observeMovies()
 
-            tabShow.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    when (tab?.position) {
+            tabShow
+                .tabSelectionEvents()
+                .onEach {
+                    when (it.tab.position) {
                         0 -> {
                             rvShow.adapter = movieAdapter
                             observeMovies()
@@ -85,11 +86,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             observeTvShows()
                         }
                     }
-                }
+                }.launchIn(lifecycleScope)
 
-                override fun onTabUnselected(tab: TabLayout.Tab?) {}
-                override fun onTabReselected(tab: TabLayout.Tab?) {}
-            })
+            /*
+            tabShow.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                 override fun onTabSelected(tab: TabLayout.Tab?) {
+                     when (tab?.position) {
+                         0 -> {
+                             rvShow.adapter = movieAdapter
+                             observeMovies()
+                         }
+                         1 -> {
+                             rvShow.adapter = tvShowAdapter
+                             observeTvShows()
+                         }
+                     }
+                 }
+
+                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
+                 override fun onTabReselected(tab: TabLayout.Tab?) {}
+             })
+              */
         }
 
         viewModel.getPopularMovies().observe(viewLifecycleOwner) { response ->
@@ -105,8 +122,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
                 is Resource.Loading -> binding.pbPopularMovie.visibility = View.VISIBLE
                 is Resource.Success -> {
-                    binding.pbPopularMovie.visibility = View.GONE
-                    popularAdapter.submitList(DataMapper.mapMovieDomainsToPresenters(response.data))
+                    response.data?.let {
+                        if (it.isNotEmpty()) {
+                            binding.pbPopularMovie.visibility = View.GONE
+                            popularAdapter.submitList(
+                                DataMapper.mapMovieDomainsToPresenters(
+                                    it
+                                )
+                            )
+                        } else {
+                            binding.ivNoData.visibility = View.VISIBLE
+                            binding.tvNoData.visibility = View.VISIBLE
+                        }
+                    }
                 }
             }
         }
@@ -126,8 +154,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
                 is Resource.Loading -> binding.pbShow.visibility = View.VISIBLE
                 is Resource.Success -> {
-                    binding.pbShow.visibility = View.GONE
-                    movieAdapter.submitList(DataMapper.mapMovieDomainsToPresenters(response.data))
+                    response.data?.let {
+                        if (it.isNotEmpty()) {
+                            binding.pbShow.visibility = View.GONE
+                            movieAdapter.submitList(
+                                DataMapper.mapMovieDomainsToPresenters(
+                                    it
+                                )
+                            )
+                        } else {
+                            binding.ivNoData.visibility = View.VISIBLE
+                            binding.tvNoData.visibility = View.VISIBLE
+                        }
+                    }
                 }
             }
         }
@@ -147,8 +186,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
                 is Resource.Loading -> binding.pbShow.visibility = View.VISIBLE
                 is Resource.Success -> {
-                    binding.pbShow.visibility = View.GONE
-                    tvShowAdapter.submitList(DataMapper.mapTvDomainsToPresenters(response.data))
+                    response.data?.let {
+                        if (it.isNotEmpty()) {
+                            binding.pbShow.visibility = View.GONE
+                            tvShowAdapter.submitList(
+                                DataMapper.mapTvDomainsToPresenters(
+                                    it
+                                )
+                            )
+                        } else {
+                            binding.ivNoData.visibility = View.VISIBLE
+                            binding.tvNoData.visibility = View.VISIBLE
+                        }
+                    }
                 }
             }
         }

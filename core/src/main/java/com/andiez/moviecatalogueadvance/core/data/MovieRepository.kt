@@ -4,19 +4,12 @@ import com.andiez.moviecatalogueadvance.core.data.source.local.LocalDataSource
 import com.andiez.moviecatalogueadvance.core.data.source.local.entity.ShowCategory
 import com.andiez.moviecatalogueadvance.core.data.source.remote.RemoteDataSource
 import com.andiez.moviecatalogueadvance.core.data.source.remote.network.ApiResponse
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.CastResponse
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.MovieDetailResponse
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.MovieResponse
-import com.andiez.moviecatalogueadvance.core.data.source.remote.response.TvShowResponse
-import com.andiez.moviecatalogueadvance.core.domain.model.Cast
-import com.andiez.moviecatalogueadvance.core.domain.model.Movie
-import com.andiez.moviecatalogueadvance.core.domain.model.MovieDetail
-import com.andiez.moviecatalogueadvance.core.domain.model.TvShow
+import com.andiez.moviecatalogueadvance.core.data.source.remote.response.*
+import com.andiez.moviecatalogueadvance.core.domain.model.*
 import com.andiez.moviecatalogueadvance.core.domain.repository.IMovieRepository
 import com.andiez.moviecatalogueadvance.core.utils.AppExecutors
 import com.andiez.moviecatalogueadvance.core.utils.DataMapper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -113,14 +106,56 @@ class MovieRepository @Inject constructor(
             }
         }.asFlow()
 
-    override fun getCasts(id: Int): Flow<Resource<List<Cast>>> =
+    override fun getDetailTvShow(id: Int): Flow<Resource<TvShowDetail>> =
+        object : NetworkBoundResource<TvShowDetail, TvShowDetailResponse>() {
+            override fun loadFromDB(): Flow<TvShowDetail> {
+                return localDataSource.getTvDetail(id)
+                    .map { DataMapper.mapTvShowDetailEntityToDomain(it) }
+            }
+
+            override fun shouldFetch(data: TvShowDetail?): Boolean = true
+
+            override suspend fun createCall(): Flow<ApiResponse<TvShowDetailResponse>> {
+                return remoteDataSource.getDetailTvShow(id)
+            }
+
+            override suspend fun saveCallResult(data: TvShowDetailResponse) {
+                localDataSource.insertDetailTv(DataMapper.mapTvShowDetailResponseToEntity(data))
+            }
+        }.asFlow()
+
+    override fun getCasts(type: String, id: Int): Flow<Resource<List<Cast>>> =
         object : NetworkOnlyResource<List<Cast>, List<CastResponse>>() {
             override fun loadFromNetwork(data: List<CastResponse>): Flow<List<Cast>> {
                 return flowOf(DataMapper.mapCastResponsesToDomains(data))
             }
 
             override suspend fun createCall(): Flow<ApiResponse<List<CastResponse>>> {
-                return remoteDataSource.getCasts(id)
+                return remoteDataSource.getCasts(type, id)
             }
         }.asFlow()
+
+    override fun setMovieFavorite(id: Int, state: Boolean) {
+        appExecutors.diskIO().execute {
+            localDataSource.updateMovieDetailFavorite(id, state)
+            localDataSource.updateMovieFavorite(id, state)
+        }
+    }
+
+    override fun getMoviesFavorite(): Flow<List<Movie>> {
+        return localDataSource.getMoviesFavorite().map {
+            DataMapper.mapMovieEntitiesToDomains(it)
+        }
+    }
+
+    override fun setTvFavorite(id: Int, state: Boolean) {
+        appExecutors.diskIO().execute {
+            localDataSource.updateTvDetailFavorite(id, state)
+            localDataSource.updateTvFavorite(id, state)
+        }
+    }
+
+    override fun getTvShowsFavorite(): Flow<List<TvShow>> {
+        return localDataSource.getTvShowsFavorite().map { DataMapper.mapTvEntitiesToDomains(it) }
+    }
 }

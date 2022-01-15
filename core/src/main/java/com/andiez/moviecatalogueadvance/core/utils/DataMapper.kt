@@ -1,14 +1,8 @@
 package com.andiez.moviecatalogueadvance.core.utils
 
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.MovieDetailEntity
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.MovieEntity
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.ShowCategory
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.TvShowEntity
+import com.andiez.moviecatalogueadvance.core.data.source.local.entity.*
 import com.andiez.moviecatalogueadvance.core.data.source.remote.response.*
-import com.andiez.moviecatalogueadvance.core.domain.model.Cast
-import com.andiez.moviecatalogueadvance.core.domain.model.Movie
-import com.andiez.moviecatalogueadvance.core.domain.model.MovieDetail
-import com.andiez.moviecatalogueadvance.core.domain.model.TvShow
+import com.andiez.moviecatalogueadvance.core.domain.model.*
 import com.andiez.moviecatalogueadvance.core.presenter.model.CastItem
 import com.andiez.moviecatalogueadvance.core.presenter.model.DetailItem
 import com.andiez.moviecatalogueadvance.core.presenter.model.ShowItem
@@ -64,6 +58,7 @@ object DataMapper {
             entity.img,
             formatter.parse(entity.releaseDate),
             entity.voteAverage,
+            isFavorite = entity.isFavorite
         )
     }
 
@@ -85,6 +80,7 @@ object DataMapper {
             entity.img,
             formatter.parse(entity.firstAired),
             entity.voteAverage,
+            entity.isFavorite
         )
     }
 
@@ -92,7 +88,7 @@ object DataMapper {
         var genres = ""
         for (i in input.indices) {
             genres += when (i) {
-                0 -> "${input[i].name},"
+                0 -> input[i].name + (if (input.size != 1) "," else "")
                 input.size - 1 -> " ${input[i].name}"
                 else -> " ${input[i].name},"
             }
@@ -100,7 +96,29 @@ object DataMapper {
         return genres
     }
 
-    private fun mapSpokenLanguageResponseToEntity(input: SpokenLanguages): String = input.name
+    private fun mapSpokenLanguageResponseToEntity(input: List<SpokenLanguages>): String {
+        var languages = ""
+        for (i in input.indices) {
+            languages += when (i) {
+                0 -> input[i].name + (if (input.size != 1) "," else "")
+                input.size - 1 -> " ${input[i].name}"
+                else -> " ${input[i].name},"
+            }
+        }
+        return languages
+    }
+
+    private fun mapRuntimesResponseToEntity(input: List<Int>): String {
+        var runtimes = ""
+        for (i in input.indices) {
+            runtimes += when (i) {
+                0 -> "${input[i]}" + (if (input.size != 1) "," else "")
+                input.size - 1 -> " ${input[i]}"
+                else -> " ${input[i]},"
+            }
+        }
+        return runtimes
+    }
 
     fun mapMovieDetailResponseToEntity(input: MovieDetailResponse): MovieDetailEntity =
         MovieDetailEntity(
@@ -114,7 +132,7 @@ object DataMapper {
             input.voteAverage,
             input.overview ?: "",
             false,
-            mapSpokenLanguageResponseToEntity(input.originalLanguage[0]),
+            mapSpokenLanguageResponseToEntity(input.originalLanguage),
             input.runtime ?: 0,
             input.status,
             input.tagline
@@ -137,6 +155,41 @@ object DataMapper {
         input?.tagline ?: ""
     )
 
+    fun mapTvShowDetailResponseToEntity(input: TvShowDetailResponse): TvShowDetailEntity =
+        TvShowDetailEntity(
+            input.id,
+            mapGenresResponseToEntities(input.genres),
+            input.originalTitle,
+            input.title,
+            input.img ?: "",
+            input.backdrop ?: "",
+            input.releaseDate,
+            input.voteAverage,
+            input.overview ?: "",
+            false,
+            mapSpokenLanguageResponseToEntity(input.originalLanguage),
+            mapRuntimesResponseToEntity(input.runtime),
+            input.status,
+            input.tagline
+        )
+
+    fun mapTvShowDetailEntityToDomain(input: TvShowDetailEntity?): TvShowDetail = TvShowDetail(
+        input?.id ?: 0,
+        input?.genres ?: "",
+        input?.originalTitle ?: "",
+        input?.title ?: "",
+        input?.img ?: "",
+        input?.backdrop ?: "",
+        input?.releaseDate ?: "",
+        input?.voteAverage ?: 0.0,
+        input?.overview ?: "",
+        input?.isFavorite ?: false,
+        input?.originalLanguage ?: "",
+        input?.runtimes ?: "",
+        input?.status ?: "",
+        input?.tagline ?: ""
+    )
+
     fun mapCastDomainsToPresenters(input: List<Cast>?): List<CastItem> = input?.map {
         CastItem(it.id, it.character, it.name, it.img ?: "")
     } ?: emptyList()
@@ -153,9 +206,26 @@ object DataMapper {
         input.overview ?: "Tidak ada Overview",
         input.isFavorite,
         input.originalLanguage,
-        input.runtime ?: 0,
+        input.runtime.toString(),
         input.status,
-        "\"${input.tagline}\""
+        if (input.tagline != "") "\"${input.tagline}\"" else input.tagline
+    )
+
+    fun mapDetailTvShowDomainToPresenter(input: TvShowDetail): DetailItem = DetailItem(
+        input.id,
+        input.genres,
+        input.originalTitle,
+        input.title,
+        input.img,
+        input.backdrop,
+        CommonUtils.convertFormatDate(input.releaseDate),
+        input.voteAverage,
+        input.overview,
+        input.isFavorite,
+        input.originalLanguage,
+        input.runtimes,
+        input.status,
+        if (input.tagline != "") "\"${input.tagline}\"" else input.tagline
     )
 
     fun mapCastResponsesToDomains(input: List<CastResponse>): List<Cast> = input.map { response ->

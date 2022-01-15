@@ -12,7 +12,7 @@ data class DetailItem(
     var overview: String = "",
     var isFavorite: Boolean = false,
     var originalLanguage: String = "",
-    var runtime: Int = 0,
+    var runtime: String = "",
     var status: String = "",
     var tagline: String = ""
 )
