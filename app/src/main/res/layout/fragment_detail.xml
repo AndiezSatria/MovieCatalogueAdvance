@@ -36,7 +36,8 @@
                     android:scaleType="centerCrop"
                     app:bindLargePoster="@{data.backdrop}"
                     app:layout_collapseMode="parallax"
-                    tools:src="@drawable/cinema_bg_side" />
+                    tools:src="@drawable/cinema_bg_side"
+                    android:contentDescription="@string/text_show_backdrop" />
 
                 <View
                     android:layout_width="match_parent"
@@ -320,7 +321,8 @@
             android:clickable="false"
             app:layout_anchor="@id/app_bar"
             app:layout_anchorGravity="bottom|end"
-            app:srcCompat="@drawable/ic_favorite_border" />
+            app:srcCompat="@drawable/ic_favorite_border"
+            android:contentDescription="@string/text_button_favorite" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

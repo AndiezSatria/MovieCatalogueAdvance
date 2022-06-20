@@ -13,12 +13,6 @@ interface ApiService {
         @Query("page") page: Int = 1
     ): ListMovieResponse
 
-    @GET("movie/popular")
-    suspend fun getPopularMovie(
-        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
-        @Query("page") page: Int = 1
-    ): ListMovieResponse
-
     @GET("tv/airing_today")
     suspend fun getTvShow(
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
@@ -43,4 +37,18 @@ interface ApiService {
         @Path("tv_id") id: Int,
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
     ): TvShowDetailResponse
+
+    @GET("search/movie")
+    suspend fun getSearchedMovies(
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("query") query: String,
+        @Query("page") page: Int = 1
+    ): ListMovieResponse
+
+    @GET("search/tv")
+    suspend fun getSearchedTvShows(
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("query") query: String,
+        @Query("page") page: Int = 1
+    ): ListTvResponse
 }

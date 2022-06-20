@@ -46,6 +46,10 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             }
         }
 
+        viewModel.fromSearch.observe(viewLifecycleOwner) {
+            if (it) binding.fabFavorite.visibility = View.GONE
+        }
+
         viewModel.casts.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Error -> {
@@ -66,10 +70,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     castAdapter.submitList(
                         DataMapper.mapCastDomainsToPresenters(
                             resource.data?.let {
-                                it.subList(
-                                    0,
-                                    if (it.size < 10) (it.size - 1) else 10
-                                )
+                                if (it.isNotEmpty())
+                                    it.subList(
+                                        0,
+                                        if (it.size < 10) (it.size - 1) else 10
+                                    )
+                                else emptyList()
                             }
                         )
                     )

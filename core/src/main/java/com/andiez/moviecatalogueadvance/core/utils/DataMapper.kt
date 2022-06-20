@@ -12,31 +12,27 @@ import java.util.*
 object DataMapper {
     fun mapMovieResponsesToEntities(
         input: List<MovieResponse>,
-        showCategory: ShowCategory = ShowCategory.NowPlaying
     ): List<MovieEntity> = input.map { response ->
         MovieEntity(
             response.id,
             response.originalTitle,
             response.title,
-            response.img,
-            response.releaseDate,
+            response.img ?: "",
+            response.releaseDate ?: "",
             response.voteAverage,
-            showCategory.toString()
         )
     }
 
     fun mapTvResponsesToEntities(
         input: List<TvShowResponse>,
-        showCategory: ShowCategory = ShowCategory.NowPlaying
     ): List<TvShowEntity> = input.map { response ->
         TvShowEntity(
             response.id,
             response.originalTitle,
             response.title,
             response.img ?: "",
-            response.firstAired,
+            response.firstAired ?: "",
             response.voteAverage,
-            showCategory.toString()
         )
     }
 
@@ -50,13 +46,12 @@ object DataMapper {
     } ?: emptyList()
 
     fun mapMovieEntitiesToDomains(input: List<MovieEntity>): List<Movie> = input.map { entity ->
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         Movie(
             entity.id,
             entity.originalTitle,
             entity.title,
             entity.img,
-            formatter.parse(entity.releaseDate),
+            entity.releaseDate,
             entity.voteAverage,
             isFavorite = entity.isFavorite
         )
@@ -72,13 +67,12 @@ object DataMapper {
     } ?: emptyList()
 
     fun mapTvEntitiesToDomains(input: List<TvShowEntity>): List<TvShow> = input.map { entity ->
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         TvShow(
             entity.id,
             entity.originalTitle,
             entity.title,
             entity.img,
-            formatter.parse(entity.firstAired),
+            entity.firstAired,
             entity.voteAverage,
             entity.isFavorite
         )
@@ -128,7 +122,7 @@ object DataMapper {
             input.title,
             input.img ?: "",
             input.backdrop ?: "",
-            input.releaseDate,
+            input.releaseDate ?: "",
             input.voteAverage,
             input.overview ?: "",
             false,
@@ -163,7 +157,7 @@ object DataMapper {
             input.title,
             input.img ?: "",
             input.backdrop ?: "",
-            input.releaseDate,
+            input.releaseDate ?: "",
             input.voteAverage,
             input.overview ?: "",
             false,
@@ -235,6 +229,31 @@ object DataMapper {
             response.name,
             response.originalName,
             response.img
+        )
+    }
+
+    fun mapMovieResponsesToDomains(input: List<MovieResponse>): List<Movie> =
+        input.map { response ->
+            Movie(
+                response.id,
+                response.originalTitle,
+                response.title,
+                response.img ?: "",
+                response.releaseDate ?: "",
+                response.voteAverage,
+                false
+            )
+        }
+
+    fun mapTvResponsesToDomains(input: List<TvShowResponse>): List<TvShow> = input.map { response ->
+        TvShow(
+            response.id,
+            response.originalTitle,
+            response.title,
+            response.img ?: "",
+            response.firstAired ?: "",
+            response.voteAverage,
+            false
         )
     }
 }

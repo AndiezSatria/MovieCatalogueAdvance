@@ -14,7 +14,7 @@ import com.andiez.moviecatalogueadvance.core.data.source.local.entity.TvShowEnti
         TvShowEntity::class,
         MovieEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class MovieDatabase : RoomDatabase() {

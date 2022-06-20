@@ -15,7 +15,6 @@ import com.andiez.moviecatalogueadvance.core.presenter.model.ShowItem
 import com.andiez.moviecatalogueadvance.core.presenter.model.ShowType
 import com.andiez.moviecatalogueadvance.core.ui.MovieGridAdapter
 import com.andiez.moviecatalogueadvance.core.utils.DataMapper
-import com.andiez.moviecatalogueadvance.core.ui.MovieViewHolder
 import com.andiez.moviecatalogueadvance.core.utils.CommonUtils
 import com.andiez.moviecatalogueadvance.databinding.FragmentHomeBinding
 import com.google.android.material.snackbar.Snackbar
@@ -30,7 +29,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var movieAdapter: MovieGridAdapter
     private lateinit var tvShowAdapter: MovieGridAdapter
-    private lateinit var popularAdapter: MovieGridAdapter
     private val movieClickListener: ((ShowItem) -> Unit) = { item ->
         val uri = Uri.parse(
             getString(
@@ -58,20 +56,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         (requireActivity() as MainActivity).supportActionBar?.setTitle(R.string.text_home)
 
         movieAdapter = MovieGridAdapter()
-        popularAdapter = MovieGridAdapter().apply { viewHolder = MovieViewHolder.Popular }
         tvShowAdapter = MovieGridAdapter()
 
         movieAdapter.onItemClick = movieClickListener
-        popularAdapter.onItemClick = movieClickListener
         tvShowAdapter.onItemClick = tvClickListener
 
         with(binding) {
             lifecycleOwner = viewLifecycleOwner
-            val layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            rvPopularMovie.setHasFixedSize(true)
-            rvPopularMovie.layoutManager = layoutManager
-            rvPopularMovie.adapter = popularAdapter
 
             tabShow
                 .tabSelectionEvents()
@@ -87,56 +78,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         }
                     }
                 }.launchIn(lifecycleScope)
-
-            /*
-            tabShow.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                     when (tab?.position) {
-                         0 -> {
-                             rvShow.adapter = movieAdapter
-                             observeMovies()
-                         }
-                         1 -> {
-                             rvShow.adapter = tvShowAdapter
-                             observeTvShows()
-                         }
-                     }
-                 }
-
-                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
-                 override fun onTabReselected(tab: TabLayout.Tab?) {}
-             })
-              */
-        }
-
-        viewModel.getPopularMovies().observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Resource.Error -> {
-                    val snackbar = Snackbar.make(
-                        binding.root,
-                        response.message.toString(),
-                        Snackbar.LENGTH_SHORT
-                    )
-                    snackbar.show()
-                    binding.pbPopularMovie.visibility = View.GONE
-                }
-                is Resource.Loading -> binding.pbPopularMovie.visibility = View.VISIBLE
-                is Resource.Success -> {
-                    response.data?.let {
-                        if (it.isNotEmpty()) {
-                            binding.pbPopularMovie.visibility = View.GONE
-                            popularAdapter.submitList(
-                                DataMapper.mapMovieDomainsToPresenters(
-                                    it
-                                )
-                            )
-                        } else {
-                            binding.ivNoData.visibility = View.VISIBLE
-                            binding.tvNoData.visibility = View.VISIBLE
-                        }
-                    }
-                }
-            }
         }
     }
 

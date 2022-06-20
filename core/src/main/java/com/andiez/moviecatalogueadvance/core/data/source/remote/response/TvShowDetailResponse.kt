@@ -16,7 +16,7 @@ data class TvShowDetailResponse(
     @field:SerializedName("backdrop_path")
     var backdrop: String? = "",
     @field:SerializedName("first_air_date")
-    var releaseDate: String = "",
+    var releaseDate: String? = "",
     @field:SerializedName("vote_average")
     var voteAverage: Double = 0.0,
     @field:SerializedName("overview")

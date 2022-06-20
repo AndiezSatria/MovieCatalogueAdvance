@@ -1,20 +1,19 @@
-package com.andiez.favorite.favorite
+package com.andiez.search.search
 
 import android.content.Context
-import com.andiez.favorite.FavoriteFragment
 import com.andiez.moviecatalogueadvance.di.UseCaseModuleDependencies
+import com.andiez.search.SearchFragment
 import dagger.BindsInstance
 import dagger.Component
 
 @Component(dependencies = [UseCaseModuleDependencies::class])
-interface FavoriteComponent {
-
-    fun inject(fragment: FavoriteFragment)
+interface SearchComponent {
+    fun inject(fragment: SearchFragment)
 
     @Component.Builder
     interface Builder {
         fun context(@BindsInstance context: Context): Builder
-        fun appDependencies(mapsModuleDependencies: UseCaseModuleDependencies): Builder
-        fun build(): FavoriteComponent
+        fun appDependencies(useCaseModuleDependencies: UseCaseModuleDependencies): Builder
+        fun build(): SearchComponent
     }
 }

@@ -12,9 +12,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val useCase: MovieUseCase) : ViewModel() {
-    fun getPopularMovies(): LiveData<Resource<List<Movie>>> =
-        useCase.getPopularMovies().asLiveData()
-
     fun getMovies(): LiveData<Resource<List<Movie>>> = useCase.getMovies().asLiveData()
     fun getTvShows(): LiveData<Resource<List<TvShow>>> = useCase.getTvShows().asLiveData()
 }

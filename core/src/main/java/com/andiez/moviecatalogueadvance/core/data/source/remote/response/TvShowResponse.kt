@@ -12,7 +12,7 @@ data class TvShowResponse(
     @field:SerializedName("poster_path")
     var img: String?,
     @field:SerializedName("first_air_date")
-    var firstAired: String,
+    var firstAired: String? = "",
     @field:SerializedName("vote_average")
     var voteAverage: Double
 )

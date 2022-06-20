@@ -5,11 +5,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object CommonUtils {
-    fun createDeeplinkArgs(id: Int, showType: ShowType): String {
-        return "$id&${showType}"
+    fun createDeeplinkArgs(id: Int, showType: ShowType, isSearch: Boolean = false): String {
+        return "$id&${showType}&${if (isSearch) 1 else 0}"
     }
 
     fun convertFormatDate(oldDate: String): String {
+        if (oldDate == "") return "No Date"
         val oldFormat = "yyyy-MM-dd"
         val newFormat = "dd MMMM yyyy"
         val sdf = SimpleDateFormat(oldFormat, Locale.getDefault())

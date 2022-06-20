@@ -17,11 +17,16 @@ class DetailViewModel @Inject constructor(private val useCase: MovieUseCase) : V
     private val _showType: MutableLiveData<ShowType> = MutableLiveData()
     val showType: LiveData<ShowType> get() = _showType
 
+    private val _fromSearch: MutableLiveData<Boolean> = MutableLiveData(false)
+    val fromSearch: LiveData<Boolean> get() = _fromSearch
+
     fun setIdAndShowType(input: String) {
         val values = input.split("&")
         try {
             id.value = values[0].toInt()
             _showType.value = ShowType.valueOf(values[1])
+            val isSearch = values[2].toInt()
+            _fromSearch.value = isSearch == 1
         } catch (e: Exception) {
             Log.e("***", e.message.toString())
         }

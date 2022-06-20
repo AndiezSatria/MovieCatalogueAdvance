@@ -18,7 +18,7 @@ import com.andiez.moviecatalogueadvance.core.presenter.model.ShowType
 import com.andiez.moviecatalogueadvance.core.ui.MovieGridAdapter
 import com.andiez.moviecatalogueadvance.core.utils.CommonUtils
 import com.andiez.moviecatalogueadvance.core.utils.DataMapper
-import com.andiez.moviecatalogueadvance.di.FavoriteModuleDependencies
+import com.andiez.moviecatalogueadvance.di.UseCaseModuleDependencies
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -62,7 +62,7 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
             .appDependencies(
                 EntryPointAccessors.fromApplication(
                     requireActivity().applicationContext,
-                    FavoriteModuleDependencies::class.java
+                    UseCaseModuleDependencies::class.java
                 )
             )
             .build()

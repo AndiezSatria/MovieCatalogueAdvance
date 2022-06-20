@@ -28,21 +28,6 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getPopularMovies(): Flow<ApiResponse<List<MovieResponse>>> = flow {
-        try {
-            val response = apiService.getPopularMovie()
-            val dataArray = response.results
-            if (dataArray.isNotEmpty()) {
-                emit(ApiResponse.Success(response.results))
-            } else {
-                emit(ApiResponse.Empty)
-            }
-        } catch (e: Exception) {
-            emit(ApiResponse.Error(e.toString()))
-            Log.e("RemoteDataSource", e.toString())
-        }
-    }.flowOn(Dispatchers.IO)
-
     suspend fun getTvShows(): Flow<ApiResponse<List<TvShowResponse>>> = flow {
         try {
             val response = apiService.getTvShow()
@@ -84,6 +69,36 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
             val dataArray = response.casts
             if (dataArray.isNotEmpty()) {
                 emit(ApiResponse.Success(response.casts))
+            } else {
+                emit(ApiResponse.Empty)
+            }
+        } catch (e: Exception) {
+            emit(ApiResponse.Error(e.toString()))
+            Log.e("RemoteDataSource", e.toString())
+        }
+    }.flowOn(Dispatchers.IO)
+
+    suspend fun getSearchedMovies(query: String): Flow<ApiResponse<List<MovieResponse>>> = flow {
+        try {
+            val response = apiService.getSearchedMovies(query = query)
+            val dataArray = response.results
+            if (dataArray.isNotEmpty()) {
+                emit(ApiResponse.Success(response.results))
+            } else {
+                emit(ApiResponse.Empty)
+            }
+        } catch (e: Exception) {
+            emit(ApiResponse.Error(e.toString()))
+            Log.e("RemoteDataSource", e.toString())
+        }
+    }.flowOn(Dispatchers.IO)
+
+    suspend fun getSearchedTvShows(query: String): Flow<ApiResponse<List<TvShowResponse>>> = flow {
+        try {
+            val response = apiService.getSearchedTvShows(query = query)
+            val dataArray = response.results
+            if (dataArray.isNotEmpty()) {
+                emit(ApiResponse.Success(response.results))
             } else {
                 emit(ApiResponse.Empty)
             }

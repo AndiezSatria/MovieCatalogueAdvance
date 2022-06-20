@@ -10,9 +10,9 @@ data class MovieResponse(
     @field:SerializedName("title")
     var title: String,
     @field:SerializedName("poster_path")
-    var img: String,
+    var img: String?,
     @field:SerializedName("release_date")
-    var releaseDate: String,
+    var releaseDate: String? = "",
     @field:SerializedName("vote_average")
     var voteAverage: Double
 )

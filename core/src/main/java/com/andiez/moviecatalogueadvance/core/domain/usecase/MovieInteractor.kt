@@ -15,10 +15,6 @@ class MovieInteractor @Inject constructor(private val repository: IMovieReposito
         return repository.getTvShows()
     }
 
-    override fun getPopularMovies(): Flow<Resource<List<Movie>>> {
-        return repository.getPopularMovies()
-    }
-
     override fun getDetailMovie(id: Int): Flow<Resource<MovieDetail>> {
         return repository.getDetailMovie(id)
     }
@@ -45,5 +41,13 @@ class MovieInteractor @Inject constructor(private val repository: IMovieReposito
 
     override fun getTvShowsFavorite(): Flow<List<TvShow>> {
         return repository.getTvShowsFavorite()
+    }
+
+    override fun searchMovie(query: String): Flow<Resource<List<Movie>>> {
+        return repository.getSearchedMovies(query)
+    }
+
+    override fun searchTvShow(query: String): Flow<Resource<List<TvShow>>> {
+        return repository.getSearchedTvShows(query)
     }
 }

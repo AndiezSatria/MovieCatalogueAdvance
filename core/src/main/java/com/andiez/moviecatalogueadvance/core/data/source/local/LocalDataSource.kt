@@ -10,7 +10,6 @@ import javax.inject.Singleton
 class LocalDataSource @Inject constructor(private val movieDao: MovieDao) {
     fun getMovies(): Flow<List<MovieEntity>> = movieDao.getMovies()
     fun getTvShows(): Flow<List<TvShowEntity>> = movieDao.getTvShows()
-    fun getPopularMovies(): Flow<List<MovieEntity>> = movieDao.getPopularMovies()
     fun getMovieDetail(id: Int): Flow<MovieDetailEntity> = movieDao.getMovieDetail(id)
     fun getTvDetail(id: Int): Flow<TvShowDetailEntity> = movieDao.getTvDetail(id)
     fun getMoviesFavorite(): Flow<List<MovieEntity>> = movieDao.getMoviesFavorite()
@@ -27,12 +26,6 @@ class LocalDataSource @Inject constructor(private val movieDao: MovieDao) {
     fun updateMovieDetailFavorite(id: Int, state: Boolean) =
         movieDao.updateMovieDetailFavorite(id, state)
 
-    fun updateMovieFavorite(id: Int, state: Boolean) =
-        movieDao.updateMovieFavorite(id, state)
-
     fun updateTvDetailFavorite(id: Int, state: Boolean) =
         movieDao.updateTvDetailFavorite(id, state)
-
-    fun updateTvFavorite(id: Int, state: Boolean) =
-        movieDao.updateTvFavorite(id, state)
 }

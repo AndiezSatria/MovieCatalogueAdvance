@@ -1,7 +1,6 @@
 package com.andiez.moviecatalogueadvance.core.data
 
 import com.andiez.moviecatalogueadvance.core.data.source.local.LocalDataSource
-import com.andiez.moviecatalogueadvance.core.data.source.local.entity.ShowCategory
 import com.andiez.moviecatalogueadvance.core.data.source.remote.RemoteDataSource
 import com.andiez.moviecatalogueadvance.core.data.source.remote.network.ApiResponse
 import com.andiez.moviecatalogueadvance.core.data.source.remote.response.*
@@ -35,32 +34,6 @@ class MovieRepository @Inject constructor(
 
             override suspend fun saveCallResult(data: List<MovieResponse>) {
                 localDataSource.insertMovies(DataMapper.mapMovieResponsesToEntities(data))
-            }
-
-        }.asFlow()
-
-    override fun getPopularMovies(): Flow<Resource<List<Movie>>> =
-        object : NetworkBoundResource<List<Movie>, List<MovieResponse>>() {
-            override fun loadFromDB(): Flow<List<Movie>> {
-                return localDataSource.getPopularMovies()
-                    .map { DataMapper.mapMovieEntitiesToDomains(it) }
-            }
-
-            override fun shouldFetch(data: List<Movie>?): Boolean =
-                // data == null || data.isEmpty()
-                true
-
-            override suspend fun createCall(): Flow<ApiResponse<List<MovieResponse>>> {
-                return remoteDataSource.getPopularMovies()
-            }
-
-            override suspend fun saveCallResult(data: List<MovieResponse>) {
-                localDataSource.insertMovies(
-                    DataMapper.mapMovieResponsesToEntities(
-                        data,
-                        ShowCategory.Popular
-                    )
-                )
             }
 
         }.asFlow()
@@ -133,12 +106,15 @@ class MovieRepository @Inject constructor(
             override suspend fun createCall(): Flow<ApiResponse<List<CastResponse>>> {
                 return remoteDataSource.getCasts(type, id)
             }
+
+            override fun loadNothing(): List<Cast> {
+                return emptyList()
+            }
         }.asFlow()
 
     override fun setMovieFavorite(id: Int, state: Boolean) {
         appExecutors.diskIO().execute {
             localDataSource.updateMovieDetailFavorite(id, state)
-            localDataSource.updateMovieFavorite(id, state)
         }
     }
 
@@ -151,11 +127,44 @@ class MovieRepository @Inject constructor(
     override fun setTvFavorite(id: Int, state: Boolean) {
         appExecutors.diskIO().execute {
             localDataSource.updateTvDetailFavorite(id, state)
-            localDataSource.updateTvFavorite(id, state)
         }
     }
 
     override fun getTvShowsFavorite(): Flow<List<TvShow>> {
         return localDataSource.getTvShowsFavorite().map { DataMapper.mapTvEntitiesToDomains(it) }
     }
+
+    override fun getSearchedMovies(query: String): Flow<Resource<List<Movie>>> =
+        object : NetworkOnlyResource<List<Movie>, List<MovieResponse>>() {
+            override suspend fun createCall(): Flow<ApiResponse<List<MovieResponse>>> {
+                return remoteDataSource.getSearchedMovies(query)
+            }
+
+            override fun loadFromNetwork(data: List<MovieResponse>): Flow<List<Movie>> {
+                return flowOf(DataMapper.mapMovieResponsesToDomains(data))
+            }
+
+            override fun loadNothing(): List<Movie> {
+                return emptyList()
+            }
+
+
+        }.asFlow()
+
+    override fun getSearchedTvShows(query: String): Flow<Resource<List<TvShow>>> =
+        object : NetworkOnlyResource<List<TvShow>, List<TvShowResponse>>() {
+
+            override suspend fun createCall(): Flow<ApiResponse<List<TvShowResponse>>> {
+                return remoteDataSource.getSearchedTvShows(query)
+            }
+
+            override fun loadFromNetwork(data: List<TvShowResponse>): Flow<List<TvShow>> {
+                return flowOf(DataMapper.mapTvResponsesToDomains(data))
+            }
+
+            override fun loadNothing(): List<TvShow> {
+                return emptyList()
+            }
+
+        }.asFlow()
 }

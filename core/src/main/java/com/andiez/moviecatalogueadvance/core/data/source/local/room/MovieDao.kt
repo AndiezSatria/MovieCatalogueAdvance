@@ -6,14 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
-    @Query("SELECT * FROM movieentity WHERE category = :category")
-    fun getPopularMovies(category: String = ShowCategory.Popular.name): Flow<List<MovieEntity>>
-
-    @Query("SELECT * FROM movieentity WHERE category = :categoryPlaying OR category = :categoryPopular ")
-    fun getMovies(
-        categoryPlaying: String = ShowCategory.NowPlaying.name,
-        categoryPopular: String = ShowCategory.Popular.name
-    ): Flow<List<MovieEntity>>
+    @Query("SELECT * FROM movieentity")
+    fun getMovies(): Flow<List<MovieEntity>>
 
     @Query("SELECT * FROM tvshowentity")
     fun getTvShows(): Flow<List<TvShowEntity>>
@@ -39,18 +33,12 @@ interface MovieDao {
     @Query("UPDATE moviedetailentity SET isFavorite = :state WHERE id = :id")
     fun updateMovieDetailFavorite(id: Int, state: Boolean)
 
-    @Query("UPDATE movieentity SET isFavorite = :state WHERE id = :id")
-    fun updateMovieFavorite(id: Int, state: Boolean)
-
-    @Query("SELECT * FROM movieentity WHERE isFavorite = 1")
+    @Query("SELECT * FROM movieentity JOIN moviedetailentity ON moviedetailentity.isFavorite = 1 AND movieentity.id = moviedetailentity.id")
     fun getMoviesFavorite(): Flow<List<MovieEntity>>
 
     @Query("UPDATE tvshowdetailentity SET isFavorite = :state WHERE id = :id")
     fun updateTvDetailFavorite(id: Int, state: Boolean)
 
-    @Query("UPDATE tvshowentity SET isFavorite = :state WHERE id = :id")
-    fun updateTvFavorite(id: Int, state: Boolean)
-
-    @Query("SELECT * FROM tvshowentity WHERE isFavorite = 1")
+    @Query("SELECT * FROM tvshowentity JOIN TvShowDetailEntity ON TvShowDetailEntity.isFavorite = 1 AND tvshowentity.id = TvShowDetailEntity.id")
     fun getTvShowsFavorite(): Flow<List<TvShowEntity>>
 }

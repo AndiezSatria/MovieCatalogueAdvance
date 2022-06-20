@@ -10,10 +10,12 @@ abstract class NetworkOnlyResource<ResultType, RequestType> {
             is ApiResponse.Success -> {
                 emitAll(loadFromNetwork(apiResponse.data).map { Resource.Success(it) })
             }
-            is ApiResponse.Empty -> {}
+            is ApiResponse.Empty -> {
+                emit(Resource.Success(loadNothing()))
+            }
             is ApiResponse.Error -> {
                 onFetchFailed()
-                emit(Resource.Error<ResultType>(apiResponse.errorMessage))
+                emit(Resource.Error(apiResponse.errorMessage))
             }
         }
     }
@@ -21,6 +23,8 @@ abstract class NetworkOnlyResource<ResultType, RequestType> {
     protected open fun onFetchFailed() {}
 
     protected abstract fun loadFromNetwork(data: RequestType): Flow<ResultType>
+
+    protected abstract fun loadNothing(): ResultType
 
     protected abstract suspend fun createCall(): Flow<ApiResponse<RequestType>>
 

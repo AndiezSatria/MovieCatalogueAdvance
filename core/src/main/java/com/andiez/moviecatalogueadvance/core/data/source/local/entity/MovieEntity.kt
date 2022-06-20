@@ -21,8 +21,6 @@ data class MovieEntity(
     var releaseDate: String = "",
     @ColumnInfo(name = "voteAverage")
     var voteAverage: Double = 0.0,
-    @ColumnInfo(name = "category")
-    var category: String = ShowCategory.NowPlaying.toString(),
     @ColumnInfo(name = "isFavorite")
     var isFavorite: Boolean = false
 )
